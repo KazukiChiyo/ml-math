@@ -1,0 +1,82 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+\subsection{Optimizing $\alpha_i$ and $\alpha_j$}
+Recall the dual form of soft-SVM:$$\max_{\alpha}\bigg(\sum_{i=1}^N \alpha_i-\frac{1}{2}|\sum_{i=1}^N\alpha_i y_i \textbf{x}_i|^2\bigg)=\max_{\alpha}\bigg(\sum_{i=1}^N \alpha_i-\frac{1}{2}\sum_{i=1}^N\sum_{j=1}^N\alpha_i\alpha_j y_i y_j \textbf{x}_i^T\textbf{x}_j\bigg),$$
+
+with constraints $0\leq \alpha_i\leq C, \sum_{i=1}^N\alpha_iy_i=0$. Sequential minimal optimization (SMO) algorithm selects $\alpha_i$ and $\alpha_j$ pairs that maximizes the objective function. The optimal $\alpha_j$ to optimize the dual problem is given by $$\alpha_j = \alpha_j'-\frac{y_j(E_i-E_j)}{\eta},$$
+
+where $\alpha_j'$ is the old value of $\alpha_j$ before updating, $E_k=\sum_{i=1}^N\alpha_iy_i\textbf{x}_i^T\textbf{x}-y_k$ is the error between the k-th predicted example and true label, and $\eta=2\textbf{x}_i^T\textbf{x}_j-\textbf{x}_i^T\textbf{x}_i-\textbf{x}_j^T\textbf{x}_j$. Next evaluate the bounds $L$ and $H$ and clip $\alpha_j$ such that $L\leq \alpha_j \leq H$ must hold so that $0\leq \alpha_i \leq C$. These bounds are determined by the following:
+\begin{equation} \label{eq3-7}
+\{ L, H \} = \left\{
+        \begin{array}{ll}
+            \{\max(0, \alpha_j-\alpha_i), \min(C, C+\alpha_j-\alpha_i)\} & \quad y_i\neq y_j \\
+            \{\max(0, \alpha_i+\alpha_j-C), \min(C, \alpha_i+\alpha_j)\} & \quad y_i=y_j
+        \end{array}
+    \right.
+\end{equation}
+
+Finally, given $\alpha_j'$ and $\alpha_j$, $\alpha_i$ can be calculated as $\alpha_i=\alpha_i'+y_iy_j(\alpha_j'-\alpha_j)$.
+
+\subsection{Computing threshold $b$}
+The following conditions are valid for linear program $y=\textbf{w}^T\textbf{x}+b$:
+\begin{equation} \label{eq3-8}
+b = \left\{
+        \begin{array}{ll}
+            b_1=b'-E_i-y_i(\alpha_i-\alpha_i')\textbf{x}_i^T\textbf{x}_i-y_j(\alpha_j-\alpha_j')\textbf{x}_i^T\textbf{x}_j & \quad 0<\alpha_i<C \\
+            b_2=b'-E_j-y_i(\alpha_i-\alpha_i')\textbf{x}_i^T\textbf{x}_j-y_j(\alpha_j-\alpha_j')\textbf{x}_j^T\textbf{x}_j & \quad 0<\alpha_j<C \\
+            (b_1+b_2)/2 & \quad o.w.
+        \end{array}
+    \right.
+\end{equation}
+
+\subsection{Simplified SMO}
+\smallskip\begin{algorithm}[H]
+\caption{SMO}\label{smo}
+\begin{algorithmic}[5]
+\Procedure{update\_pair}{i, C, tol}
+  \State $E_i=\sum_{i=1}^N\alpha_iy_i\textbf{x}_i^T\textbf{x}-y_i$
+  \If{($y_iE_i<-\text{tol}$ and $\alpha_i<C$) or ($y_iE_i>-\text{tol}$ and $\alpha_i>0$)}
+    \State j := rand(1, N), j $\neq$ i
+    \State $E_j=\sum_{i=1}^N\alpha_iy_i\textbf{x}_i^T\textbf{x}-y_j$
+    \State $\alpha_i':=\alpha_i$
+    \State $\alpha_j':=\alpha_j$
+    \State evaluate \{L, H\} by equation \ref{eq3-7}
+    \If{L==H}
+      \State \textbf{return} 0
+    \EndIf
+    \State $\eta:=2\textbf{x}_i^T\textbf{x}_j-\textbf{x}_i^T\textbf{x}_i-\textbf{x}_j^T\textbf{x}_j$
+    \If{$\eta \geq 0$}
+      \State \textbf{return} 0
+    \EndIf
+    \State clip $\alpha_j$ by \{L, H\}
+    \If{$|\alpha_j-\alpha_j'|<0.00001$}
+      \State \textbf{return} 0
+    \EndIf
+    \State $\alpha_i:=\alpha_i'+y_iy_j(\alpha_j'-\alpha_j)$
+    evaluate b by equation \ref{eq3-8}
+    \State \textbf{return}
+  \EndIf
+  \State \textbf{return} 0
+\EndProcedure
+\\
+\Procedure{smo}{\textbf{x}, y, max\_iter, C, tol}
+  \State $\alpha$[1...N] := 0
+  \State b := 0
+  \State iter := 0
+  \While{iter $<$ max\_iter}
+    \State pair\_update\_flag := 0
+    \For{i in [1, N]}
+      \State pair\_update\_flag += update\_pair(i, C, tol)
+    \EndFor
+    \If{pair\_update\_flag == 0}
+      \State iter += 1
+    \Else
+      \State iter := 0
+    \EndIf
+  \EndWhile
+  \State \textbf{return} $\alpha$[1...N], b
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}\smallskip
+\end{document}

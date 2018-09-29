@@ -1,0 +1,32 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+\subsection{Slack variable relaxation}
+\textbf{Soft-SVM}\index{soft-SVM} is a relaxation of the hard-SVM rule that can be applied even if the training set is not linearly separable. We define \textbf{slack variables}\index{slack variables} $\xi_i>0$, so that the constraint in equation \ref{eq3-1} is now being relaxed as $y_i\textbf{w}^T\textbf{x}_i\geq 1-\xi_i$. Adding slack variables as a penalty term, we obtain the primal form of the soft-SVM: $$\min_{\textbf{w}, \xi}\big( \frac{1}{2}|\textbf{w}|^2+C\sum_{i=1}^N\xi_i \big) \quad \text{s.t.} \quad \xi_i\geq 0, y_i\textbf{w}^T\textbf{x}_i\geq 1-\xi_i,$$
+where $C$ is the L1 penalty factor that trades off margin width with data misclassifications.
+
+\subsection{Dual problem}
+The Lagrangian of the primal solution can be written as $$\mathcal{L}((\textbf{w}, T, \xi), \alpha, \mu)=\frac{1}{2}|\textbf{w}|^2+C\sum_{i=1}^N\xi_i+\sum_{i=1}^N\alpha_i\big((1-\xi_i)-y_i(\textbf{w}^T\textbf{x}_i-T)\big)+\sum_{i=1}^N\mu_i(-\xi_i).$$
+
+Taking derivatives w.r.t. the primal variables, we have: $$\frac{\partial \mathcal{L}}{\partial \textbf{w}}=\textbf{w}-\sum_{i=1}^N\alpha_iy_i\textbf{x}_i=0 \quad \Rightarrow \quad \textbf{w}=\sum_{i=1}^N\alpha_iy_i\textbf{x}_i,$$
+$$\frac{\partial \mathcal{L}}{\partial T}=\sum_{i=1}^N\alpha_iy_i=0,$$
+$$\frac{\partial \mathcal{L}}{\partial \xi_i}=C-\alpha_i-\mu_i=0 \quad \Rightarrow \quad \mu_i=C-\alpha_i.$$
+Substitute $\mu_i=C-\alpha_i$, and ignore $T$, we have the simplified form of Lagrangian $$\mathcal{L}(\textbf{w}, \xi, \alpha)=\frac{1}{2}|\textbf{w}|^2+C\sum_{i=1}^N\xi_i+\sum_{i=1}^N\alpha_i\big(1-\xi_i-y_i\textbf{w}^T\textbf{x}_i\big),$$
+
+and the corresponding dual function is
+\begin{equation} \label{eq3-4}
+g(\alpha) = \min_{\textbf{w}} \mathcal{L}(\textbf{w}, \xi, \alpha) = \left\{
+        \begin{array}{ll}
+            \sum_{i=1}^N \alpha_i-\frac{1}{2}|\sum_{i=1}^N\alpha_i y_i \textbf{x}_i|^2 & \quad 0\leq \alpha_i\leq C, \sum_{i=1}^N\alpha_iy_i=0 \\
+            -\infty & \quad o.w.
+        \end{array}
+    \right.
+\end{equation}
+
+\subsection{Hinge loss}
+We can rewrite the primal solution of soft-SVM as a regularized form $$\min_{\textbf{w}, \xi}\big( \frac{\lambda}{2}|\textbf{w}|^2+\sum_{i=1}^N\xi_i \big) \quad \text{s.t.} \quad \xi_i\geq 0, y_i\textbf{w}^T\textbf{x}_i\geq 1-\xi_i,$$ 
+
+and since $\xi_i \geq 0$, the best assignment to $\xi_i$ would be 0 if $y_i\textbf{w}^T\textbf{x}_i\geq 1$ and would be $1-y_i\textbf{w}^T\textbf{x}_i$ otherwise. Therefore, we can further simplify the form into an unconstrained form $$\min_{\textbf{w}}\big( \frac{\lambda}{2}|\textbf{w}|^2+\sum_{i=1}^Nl_{\text{hinge}}(y_i\textbf{w}^T\textbf{x}_i) \big),$$
+
+where $l_{\text{hinge}}(z)=\max\{0, 1-z\}$ is the \textbf{hinge loss}\index{hinge loss} function.
+\end{document}

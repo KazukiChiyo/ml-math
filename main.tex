@@ -1,0 +1,102 @@
+\documentclass{book}
+\usepackage[utf8]{inputenc}
+\usepackage{imakeidx}
+\makeindex[columns=3, title=Index, intoc, options= -s index.ist]
+\usepackage{graphicx, wrapfig, float, subcaption}
+\graphicspath{{images/}{../images/}}
+\usepackage{subfiles}
+\usepackage{amssymb}
+\usepackage{geometry}
+ \geometry{
+ letterpaper,
+ top=1in,
+ bottom=1in,
+ }
+\usepackage{color}   %May be necessary if you want to color links
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false, %set true if you want colored links
+    linktoc=all,     %set to all if you want both sections and subsections linked
+}
+\usepackage{ragged2e}
+\usepackage{algorithm, algpseudocode, float, caption, multicol}
+\usepackage{amsthm, amsmath}
+\usepackage{enumitem}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[theorem]
+\newtheorem{lemma}[theorem]{Lemma}
+\setcounter{tocdepth}{1}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Logistics
+\tableofcontents
+\listofalgorithms
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Regression Models
+\chapter{Regression Models}
+\section{Linear Regression}
+    \subfile{regression-models/linear-regression.tex}
+\medskip
+\section{Coordinate Descent}
+    \subfile{regression-models/coordinate-descent.tex}
+\medskip
+\section{Gradient Descent}
+    \subfile{regression-models/gradient-descent.tex}
+\medskip
+\section{Logistic Regression}
+    \subfile{regression-models/logistic-regression.tex}
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Convex Optimization
+\chapter{Optimization Problems}
+\section{Convex Optimization}
+    \subfile{optimization-problems/convex-optimization.tex}
+\medskip
+\section{Convergence}
+    \subfile{optimization-problems/convergence.tex}
+\medskip
+\section{SGD Techniques}
+    \subfile{optimization-problems/sgd-techniques.tex}
+\medskip
+\section{Lagrange Dual}
+    \subfile{optimization-problems/lagrange-dual.tex}
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Support Vector Machine
+\chapter{Support Vector Machine}
+\section{Hard-SVM}
+    \subfile{support-vector-machine/hard-svm.tex}
+\medskip
+\section{Soft-SVM}
+    \subfile{support-vector-machine/soft-svm.tex}
+\medskip
+\section{Soft-SVM with SGD}
+    \subfile{support-vector-machine/soft-svm-with-sgd.tex}
+\medskip
+\section{Sequential Minimal Optimization}
+    \subfile{support-vector-machine/sequential-minimal-optimization.tex}
+\medskip
+\section{Kernel Methods}
+    \subfile{support-vector-machine/kernel-methods.tex}
+\medskip
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Learning Tools
+\chapter{Learning Tools}
+\section{Principle Component Analysis}
+    \subfile{learning-tools/principle-component-analysis.tex}
+\medskip
+\section{Singular-value Decomposition}
+    % \subfile{learning-tools/singular-value-decomposition.tex}
+\medskip
+\section{Adaboost}
+    % \subfile{learning-tools/adaboost.tex}
+\medskip
+
+\printindex
+\end{document}

@@ -1,0 +1,53 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+\subsection{Least square for binary classification}
+We can optimize least square problem with sigmoid activation function $\sigma(x)=\frac{1}{1+\exp{(-x)}}:$ $$\min_{\textbf{w}}l(\textbf{w})=\frac{1}{2n}\sum_{i\in[n]}\big[y^{(i)}-\sigma(\textbf{w}^Tx^{(i)})\big]^2.$$ 
+
+We can solve this binary classification problem with gradient descent. Derivative of sigmoid function is $\frac{d\sigma}{dx}=\sigma(x)(1-\sigma(x))$, and so $\nabla f(\textbf{w})$ is
+
+\begin{equation} \label{eq1-4}
+\begin{split}
+\nabla f(\textbf{w}) & = \frac{1}{n}\sum\frac{\partial f_i(\textbf{w})}{\partial \sigma(z)}\frac{\partial \sigma(z)}{\partial z}\frac{\partial z}{\partial \textbf{w}} \\
+ & = \frac{1}{2n} \sum 2(y^{(i)} - \sigma(z)\cdot -\sigma(z)(1 - \sigma(z)) \\
+ & = -\frac{1}{n} \sum (y^{(i)}-\sigma(\textbf{w}^Tx^{(i)})) \cdot \sigma(\textbf{w}^Tx^{(i)})(1 - \sigma(\textbf{w}^Tx^{(i)})),
+\end{split}
+\end{equation}
+
+and the update rule is $\textbf{w}_{t+1}=\textbf{w}_t-\eta\nabla f(\textbf{w}_t)$.
+
+\subsection{Logistic regression}
+Linear regression model can be generalized into binary classification. Linear regression output $\textbf{w}^T\textbf{x}$ can be mapped to class label $y\in \{-1, 1\}$ by sigmoid function $g(x)$ in the following way: $$y^{(i)}=\text{sgn}\big(\sigma(\textbf{w}^Tx^{(i)})-0.5\big).$$ 
+
+This forms \textbf{logistic regression}\index{logistic regression} with probabilistic formulation $$p(y_i|x_i)=\sigma(y^{i}\textbf{w}^Tx^{(i)}).$$ 
+
+Assume i.i.d., we can solve the negative log-likelihood $$\min_{\textbf{w}}l(\textbf{w})=\sum_{i\in[n]}\log \sigma(-y^{i}\textbf{w}^Tx^{(i)})), $$
+
+Consider $z=y^{(i)}\textbf{w}^T\textbf{x}^{(i)}$. Use chain rule, we have the gradient
+\begin{equation} \label{eq1-5}
+\begin{split}
+\nabla f(\textbf{w}) & = \frac{1}{n}\sum\frac{\partial f_i(\textbf{w})}{\partial \sigma(z)}\frac{\partial \sigma(z)}{\partial z}\frac{\partial z}{\partial \textbf{w}} \\
+ & = \frac{1}{n}\sum-\frac{1}{\sigma(z)}\sigma(z)(1-\sigma(z)y^{(i)}\textbf{x}^{(i)} \\
+ & = -\frac{1}{n}\sum(1-\sigma(z))y^{(i)}\textbf{x}^{(i)} \\
+ & = -\frac{1}{n}\sum(1-\sigma(y^{(i)}\textbf{w}^T\textbf{x}^{(i)}))y^{(i)}\textbf{x}^{(i)},
+\end{split}
+\end{equation}
+and so the update rule is $\textbf{w}_{t+1}=\textbf{w}_t-\eta\nabla f(\textbf{w}_t)$. Logistic regression can be solved with gradient descent as follows:
+
+\smallskip\begin{algorithm}[H]
+\caption{Logistic regression}\label{logistic}
+\begin{algorithmic}[5]
+\Procedure{logistic}{\textbf{x}, y, max\_iter}
+  \State \textbf{w} := 0
+  \For{t in max\_iter}
+    \For{i in N}
+    \State $z_i:=-y_i\textbf{w}^Tx_i$
+      \State $g_i:=\frac{-y_ix_i\exp{(z_i)}}{N(1+\exp{(z_i)})}$
+      \State $\textbf{w}:=\textbf{w}-\eta g_i$
+    \EndFor
+  \EndFor
+  \State \textbf{return} \textbf{w}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}\smallskip
+\end{document}

@@ -1,0 +1,39 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+\subsection{Empirical risk minimization}
+Given a predictor $h_S:\textbf{x}\to y$ from sample dataset $S$, the \textbf{empirical risk}\index{empirical risk} is defined as $$l_h(S, \theta)=\frac{\{i\in N: h(x_i, \theta)\neq y_i\}}{N}.$$
+
+\textbf{Empirical risk minimization (ERM)}\index{empirical risk minimization} finds a decision procedure to minimize the empirical risk: $$\argmin_{\theta}l_h(S, \theta).$$
+
+\subsection{Least square}
+Linear regression is a model of the form $p(y|x, \theta)=\mathcal N(y|\textbf{w}^T\textbf{x}, \sigma^2)$, but can also model non-linear relationships by adding a kernel function of $\textbf{x}$, $\Phi (\textbf{x})=\{1, x, x^2, ...\}$, so that $p(y|x, \theta)=\mathcal N(y|\textbf{w}^T\Phi (\textbf{x}), \sigma^2)$. Assume i.i.d., then for $x_i\in \textbf{x}$, we can evaluate the Gaussian maximum log likelihood of the linear regression model as
+
+\begin{equation} \label{eq1-1}
+\begin{split}
+l(\theta) & = \sum_{i=1}^{N}\log p(y_i|x_i, \theta) \\
+ & = \sum_{i=1}^N\log \bigg[ \frac{1}{\sqrt{2\pi\sigma^2}}\exp \big( -\frac{1}{2\sigma^2}(y_i-\textbf{w}^Tx_i)^2\big)\bigg] \\
+ & = -\frac{1}{2\sigma^2}\sum_{i=1}^N(y_i-\textbf{w}^Tx_i)^2-\frac{N}{2}\log(2\pi\sigma^2),
+\end{split}
+\end{equation}
+
+where $\sum_{i=1}^N(y_i-\textbf{w}^Tx_i)^2$ is the \textbf{residual sum of squares}\index{residual sum of squares}.
+From equation \ref{eq1-1}, to maximize log likelihood $l(\theta)\sim-\sum_{i=1}^N(y_i-\textbf{w}^Tx_i)^2$ is to minimize residual sum of squares; this is to solve
+$$\argmin_{\textbf{w}}\frac{1}{2}|y-\textbf{w}^T\textbf{x}|^2_2.$$ 
+
+Then $$l(\textbf{x})=\frac{1}{2}(y-\textbf{w}^T\textbf{x})^T(y-\textbf{w}^T\textbf{x})=\frac{1}{2}\big(y^Ty-2(\textbf{w}^T\textbf{x})^Ty+(\textbf{w}^T\textbf{x})^T\textbf{w}^T\textbf{x}\big).$$
+
+Setting the gradient of $l(\textbf{x})$ w.r.t to $\textbf{w}$ to 0, then
+$$\frac{\partial l(\textbf{x})}{\partial w}=\textbf{x}^T\textbf{w}^T\textbf{x}-\textbf{x}^Ty=0,$$
+
+and so $$\hat{\textbf{w}}=(\textbf{x}^T\textbf{x})^{-1}\textbf{x}^Ty$$ 
+
+is the \textbf{ordinary least square (OLS)}\index{ordinary least square} solution. For $\textbf{x}\in \mathbb{R}^{d + 1 \times n}$, if $d + 1 > n$, $\textbf{x}^T\textbf{x}$ is not invertible and OLS solution will not fit.
+
+\subsection{Ridge regression}
+\textbf{Ridge regression}\index{ridge regression} adds a penalty term $\frac{\lambda}{2}|\textbf{w}|^2$ to the least square loss function: $$\argmin_{\textbf{w}}\frac{1}{2}\big(|y-\textbf{w}^T\textbf{x}|^2_2+\frac{\lambda}{2}|\textbf{w}|^2_2\big).$$ 
+
+The constraint for ridge regression is $|\textbf{w}|^2_2 \leq \alpha$. This gives $$\hat{\textbf{w}}=\big(\textbf{x}^T\textbf{x}+\lambda\textbf{I}\big)^{-1}\textbf{x}^Ty,$$ 
+
+where $\textbf{I}$ is the identity matrix.
+\end{document}

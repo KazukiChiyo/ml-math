@@ -1,0 +1,54 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+\subsection{Margin and primal problem}
+Let $S=\{ (\textbf{x}_1, y_1),..., (\textbf{x}_n, y_n)\}$ be a training set, such that $\textbf{x}_i\in \mathbb{R}^d$ and $y_i\in \{-1, 1\}$. Then this training set is \textbf{linearly separable}\index{linearly separable} if there exists a halfspace, $\textbf{w}$, such that $y_i=\text{sgn}(\textbf{w}^T\textbf{x}_i)$ for every $i\in [n]$. Alternatively, we have $$\forall i\in [n], y_i(\textbf{w}^T\textbf{x}_i)>0.$$
+
+The distance between a point $\textbf{x}_i$ and the hyperplane defined by \textbf{w} is $\frac{|\textbf{w}^T\textbf{x}_i|}{|\textbf{w}|}$. Then the closest point the training set $S$ to the separating hyperplane \textbf{w} is $$\min_{i\in [m]}\frac{|\textbf{w}^T\textbf{x}_i|}{|\textbf{w}|}=\min_{i\in [m]}\frac{y_i\textbf{w}^T\textbf{x}_i}{|\textbf{w}|}.$$
+
+\textbf{Hard-SVM}\index{hard-SVM} is the learning problem in which we return a hyperplane that separates the training set with the largest possible margin. Formally, we have
+\begin{equation} \label{eq3-1}
+\begin{split}
+\max_{\textbf{w}}\min_{i\in [m]}\frac{y_i\textbf{w}^T\textbf{x}_i}{|\textbf{w}|} & = \max_{\textbf{w}}\frac{r}{|\textbf{w}|} \quad\text{s.t.}\quad r\leq y_i\textbf{w}^T\textbf{x}_i \\
+ & = \max_{\textbf{w}}\frac{1}{|\textbf{w}/r|} \quad\text{s.t.}\quad 1\leq y_i(\textbf{w}/r)^T\textbf{x}_i \\
+ & = \max_{\textbf{w}}\frac{1}{|\textbf{w}|} \quad\text{s.t.}\quad y_i\textbf{w}^T\textbf{x}_i\geq 1 \\
+ & \sim \min_{\textbf{w}}\frac{1}{2}|\textbf{w}|^2 \quad\text{s.t.}\quad y_i\textbf{w}^T\textbf{x}_i\geq 1
+\end{split}
+\end{equation}
+
+This is the primal solution of hard-SVM. The loss function, $l(\textbf{w})=\frac{1}{2}|\textbf{w}|^2$ is convex, since $\frac{\partial^2 l(\textbf{w})}{\partial \textbf{w}^2}=1\geq 0$; then the above problem is a convex optimization problem. Further, the loss function is both 1-strongly-convex and 1-smooth.
+
+\subsection{Dual problem}
+Consider the following function $$
+g(\textbf{w}) = \max_{\alpha\geq 0}\sum_{i=1}^{N}\alpha_i(1-y_i\textbf{w}^T\textbf{x}_i) = \left\{
+        \begin{array}{ll}
+            0 & \quad \forall i, y_i\textbf{w}^T\textbf{x}_i\geq 1 \\
+            \infty & \quad o.w.
+        \end{array}
+    \right.
+.$$
+The primal solution of hard-SVM can be rewritten as follows:
+\begin{equation} \label{eq3-2}
+\begin{split}
+\min_{\textbf{w}}\big(\frac{1}{2}|\textbf{w}|^2+g(\textbf{w}) \big) & = \min_{\textbf{w}}\frac{1}{2}|\textbf{w}|^2+\min_{\textbf{w}}\max_{\alpha\geq 0}\big(\sum_{i=1}^{N}\alpha_i(1-y_i\textbf{w}^T\textbf{x}_i) \big) \\
+ & = \min_{\textbf{w}}\max_{\alpha\geq 0}\big(\frac{1}{2}|\textbf{w}|^2+\sum_{i=1}^{N}\alpha_i(1-y_i\textbf{w}^T\textbf{x}_i) \big) \\
+ & = \max_{\alpha\geq 0}\min_{\textbf{w}}\big(\frac{1}{2}|\textbf{w}|^2+\sum_{i=1}^{N}\alpha_i(1-y_i\textbf{w}^T\textbf{x}_i) \big),
+\end{split}
+\end{equation}
+
+by strong duality, since primal primal problem is a quadratic convex function. Therefore the Lagrange function is $$\mathcal{L}(\textbf{w}, \alpha)=\frac{1}{2}|\textbf{w}|^2+\sum_{i=1}^{N}\alpha_i(1-y_i\textbf{w}^T\textbf{x}_i),$$
+and the corresponding dual function is
+\begin{equation} \label{eq3-3}
+g(\alpha) = \min_{\textbf{w}} \mathcal{L}(\textbf{w}, \alpha) = \left\{
+        \begin{array}{ll}
+            \sum_{i=1}^N \alpha_i-\frac{1}{2}|\sum_{i=1}^N\alpha_i y_i \textbf{x}_i|^2 & \quad \alpha\geq 0 \\
+            -\infty & \quad o.w.
+        \end{array}
+    \right.
+\end{equation}
+
+\subsection{Support Vectors}
+The derivative of the Lagrange function shown in equation \ref{eq3-3} gives: $$\frac{\partial \mathcal{L}(\textbf{w}, \alpha)}{\partial \textbf{w}}=\textbf{w}-\sum_{i=1}^N y_i \alpha_i \textbf{x}_i=0 \quad \Rightarrow \quad \textbf{w}=\sum_{i=1}^N y_i \alpha_i \textbf{x}_i.$$
+
+For non-trivial $\alpha_i>0, i\in [0, N]$, \textbf{w} only depends on corresponding $(\textbf{x}_i, y_i)$. The set of $x_i$ whose $\alpha_i >0$ are the \textbf{support vectors}\index{support vector}.
+\end{document}

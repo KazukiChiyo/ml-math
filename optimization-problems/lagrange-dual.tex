@@ -1,0 +1,44 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+
+\subsection{Primal problem}
+Consider a possibly non-convex optimization problem:
+\begin{equation} \label{eq2-2}
+\begin{split}
+p^*=\min_{x}f_0(x):\quad & f_i(x)\leq 0, i=1, ..., C_1 \\
+ & h_i(x)=0, i=1, ..., C_2,
+\end{split}
+\end{equation}
+where $C_1, C_2\in \mathbb{N}$. This problem is referred as a \textbf{primal problem}\index{primal problem}. Given the domain (by intersection) of the primal problem $D$, $X$ is the feasible set of the problem if $X\subseteq D$.
+
+\subsection{Dual problem}
+To find a lower bound on a minimization problem, define the \textbf{Lagrangian}\index{Lagrangian} $\mathcal{L}: \mathbb{R}^N\times \mathbb{R}^{C_1}\times \mathbb{R}^{C_2}\to \mathbb{R}$, with values $$\mathcal{L}(x, \lambda, v)=f_0(x)+\sum_{i=1}^{C_1}\lambda_if_i(x)+\sum_{i=1}^{C_2}v_ih_i(x).$$
+
+$x$ is referred to as primal variables, and $\lambda, v$ are Lagrange multipliers. From observation, for every feasible $x\in X$ and every $\lambda >0$. $f_0(x)\geq \mathcal{L}(x, \lambda, v)$. Then the primal problem in equation \ref{eq2-2} can be represented as: $$p^*=\min_x\max_{\lambda\geq 0, v}\mathcal{L}(x, \lambda, v).$$
+
+The \textbf{Lagrange dual function}\index{Lagrange dual function} $g(\lambda, v): \mathbb{R}^{C_1}\times \mathbb{R}^{C_2}\to \mathbb{R}$ is the minimum of the Lagrangian over all values of $x$: $$g(\lambda, v)=\inf_{x\in \mathbb{R}^N}\mathcal{L}(x, \lambda, v)=\min_x\bigg(f_0(x)+\sum_{i=1}^{C_1}\lambda_if_i(x)+\sum_{i=1}^{C_2}v_ih_i(x) \bigg).$$
+
+The (Lagrange) \textbf{dual problem}\index{dual problem} is defined as: $$d^*=\max_{\lambda \geq 0, v}g(\lambda, v)=\max_{\lambda \geq 0, v}\min_x\mathcal{L}(x, \lambda, v),$$
+
+where $d^*\leq p^*$ is the best lower bound that we can obtain. This involves the maximization of a concave function under convex constraints. \\
+\\
+If $d^*=p^*$, then primal and dual problems exhibit strong duality. Strong duality usually holds for a convex problem under certain conditions. If $d^*\leq p^*$, then the problems presents weak duality. For general (possibly non-convex) problems, weak duality always holds.
+
+\subsection{Linear optimization problem}
+Consider the linear optimization problem $$p^*=\min_xc^Tx: Ax\leq b,$$
+
+where $A\in \mathbb{R}^{m\times n}, b\in \mathbb{R}^m$. The Lagrange function is $$\mathcal{L}(x, \lambda)=c^Tx+\lambda(Ax-b)=(A^T\lambda+c)^Tw-b^T\lambda,$$
+
+and the corresponding dual function is
+\begin{equation} \label{eq2-3}
+g(\lambda) = \min_x \mathcal{L}(x, \lambda) = \left\{
+        \begin{array}{ll}
+            -b^T\lambda & \quad A^T\lambda+c=0 \\
+            \infty & \quad o.w.
+        \end{array}
+    \right.
+\end{equation}
+
+Then the dual problem reads $$d^*=\max_{\lambda\geq 0}g(\lambda)=\max_{\lambda\geq 0}-b^T\lambda: A^T\lambda+c=0.$$
+\end{document}

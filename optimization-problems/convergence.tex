@@ -1,0 +1,30 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+
+\subsection{Smoothness and strong convexity}
+A differential function $f$ is \textbf{$\beta$-smooth}\index{$\beta$-smooth} if its gradient $\nabla f$ is $\beta$-Lipschitz; namely, $|\nabla f(\textbf{y})-\nabla f(\textbf{y})|\leq \beta|\textbf{y}-\textbf{x}|$. Equivalently we have $$f(\textbf{y})-f(\textbf{x})-\nabla f(\textbf{x})^T(\textbf{y}-\textbf{x})\leq \frac{\beta}{2}|\textbf{y}-\textbf{x}|^2,$$
+
+and $\nabla^2f(\textbf{x})\leq \beta$.\\
+\\
+A differential function $f$ is \textbf{$\lambda$-strongly-convex}\index{$\lambda$-strongly-convex}, if $|\nabla f(\textbf{y})-\nabla f(\textbf{y})|\geq \lambda|\textbf{y}-\textbf{x}|$. Equivalently we have 
+$$f(\textbf{y})-f(\textbf{x})-\nabla f(\textbf{x})^T(\textbf{y}-\textbf{x})\geq \frac{\lambda}{2}|\textbf{y}-\textbf{x}|^2,$$
+
+and $\nabla^2f(\textbf{x})\geq \lambda$.\\
+\\
+Squared loss $l(z)=\frac{1}{2}(a-bx)^2$ is both $b^2$-smooth and $b^2$-strongly-convex, since $\frac{d^2l(z)}{dz^2}=b^2\geq 0$. Logistic regression loss function $l(z)=\log (1+\exp{(-z)})$ is $\frac{1}{4}$-smooth, since $\frac{d^2l(z)}{dz^2}=\frac{\exp{(-x)}}{(1+\exp{(-x)})^2}\leq \frac{1}{4}$.
+\subsection{Gradient descent convergence}
+Let $f$ be convex and $S$ a closed convex set on which $f$ is differentiable. Then \textbf{first order optimality}\index{first order optimality} $$x^*\in \argmin_{x\in S}f(x)$$ 
+
+exists if and only if $\forall y\in S$, $$\nabla f(x^*)^T(x^*-y)\leq 0.$$
+
+For gradient descent problem $x^{t+1}=x^t-\eta\nabla f(x^t)$ with $f$ $\beta$-smooth, if $\eta=\frac{1}{\beta}$, then the improvement in one step of gradient descent is given by $$f\bigg( x-\frac{1}{\beta}\nabla f(x)\bigg)-f(x)\leq \frac{1}{2\beta}|\nabla f(x)|^2,$$ and generally
+
+$$f(x^t)-f(x^*)\leq \frac{2\beta|x^0-x^*|^2}{t}.$$
+
+Further, if $f$ is $\beta$-smooth and $\lambda$-strongly-convex, then $$f(x^t)-f(x^*)\leq (f(x^0)-f(x^*))\exp{\big(-\frac{t\lambda}{\beta}\big)}.$$
+
+\subsection{Stochastic gradient descent convergence}
+In stochastic gradient descent, we allow the update direction to be a random vector $v_t$ in that its expected value at each iteration will equal the gradient direction, or equivalently, a subgradient of the function at the current vector that satisfies $\mathbb{E}[v_t|x^t]\in \partial f(x^t)$. Further, for any $\epsilon >0$, to achieve $\mathbb{E}[f(x)]-f(x^*)\leq \epsilon$, it suffices to run the stochastic gradient descent algorithm with $\eta=\sqrt{\frac{B^2}{\rho^2t}}$ for a number of iterations that satisfies $t\geq \frac{B^2\rho^2}{\epsilon^2}$.
+
+\end{document}

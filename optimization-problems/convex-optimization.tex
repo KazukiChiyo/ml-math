@@ -1,0 +1,35 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+\subsection{Convexity and Lipschitzness}
+A set $C$ in a vector space is a \textbf{convex set}\index{convex set} if $\forall \textbf{x}, \textbf{y} \in C$, the line segment between \textbf{x} and \textbf{y} is contained in C. Mathematically, for any $\alpha \in [0, 1]$, $\alpha\textbf{x} + (1-\alpha)\textbf{y} \in C$. $f: C\to \mathbb{R}$ is a \textbf{convex function}\index{convex function} if $\forall \textbf{x}, \textbf{y}\in C$ and $\alpha \in[0, 1]$, $$f(\alpha\textbf{x}+(1-\alpha)\textbf{y})\leq \alpha f(\textbf{x})+(1-\alpha)f(\textbf{y}).$$
+
+The \textbf{epigraph}\index{epigraph} of a function $f$ is the set $$\text{epi}(f)=\{(\textbf{x}, r): f(\textbf{x})\leq r\}.$$
+
+A function is convex if and only if its epigraph is a convex set. The following conditions are equivalent for scalar twice differential function $f: \mathbb{R}\to \mathbb{R}$:
+\begin{enumerate}
+    \item $f$ is convex:  $f(\alpha\textbf{x}+(1-\alpha)\textbf{y})\leq \alpha f(\textbf{x})+(1-\alpha)f(\textbf{y})$;
+    \item $\nabla f$ is monotonically non-decreasing: $f(\textbf{y})-f(\textbf{x})\geq \nabla f(\textbf{x})^T(\textbf{y}-\textbf{x})$;
+    \item $\nabla^2f$ is non-negative: $\nabla^2f(\textbf{x})\geq 0$.
+\end{enumerate}
+
+A function $f$ is \textbf{$\rho$-Lipschitz}\index{$\rho$-Lipschitz} over $C$ if $\forall \textbf{x}, \textbf{y} \in C$, $|f(\textbf{y})-f(\textbf{x})|\leq \rho|\textbf{y}-\textbf{x}|$. Since $f(\textbf{y})-f(\textbf{x})=\nabla f(\textbf{m})(\textbf{y}-\textbf{x})$, where $\textbf{x}<\textbf{m}<\textbf{y}$, then $f$ is $\rho$-Lipschitz if $|\nabla f|\leq \rho$. 
+
+\subsection{Subgradients}
+Let $f: \textbf{X}\to \mathbb{R}$. Then $g\in \mathbb{R}^n$ is a \textbf{subgradient}\index{subgradient} of $f$ at $x\in X$ if for any $y\in X$, $$f(y)-f(x)\leq g^T(y-x).$$ The set of subgradients of $f$ at $x$ is denoted $\partial f(x)$. Further, if $f$ is convex and differentiable at $x$ then $\nabla f(x)\in \partial f(x)$, since by definition of convex function,
+\begin{equation} \label{eq2-1}
+\begin{split}
+f(y) & \geq \frac{f\big( (1-\alpha)x+\alpha y\big)-(1-\alpha)f(x)}{\alpha} \\
+ & = f(x)+\frac{f(x+\alpha(y-x))-f(x)}{\alpha} \\
+ & \sim f(x)+\nabla f(x)^T(y-x),
+\end{split}
+\end{equation}
+
+and so $\nabla f(x)\in \partial f(x)$. If $0\in \partial f(x)$, $x$ is both its local and global minimum.
+
+\subsection{Convex optimization problems}
+If loss function $l$ and dataset $S$ is convex, then the ERM problem of minimizing the empirical loss over $S$, $$\argmin_{\theta}l_h(S, \theta),$$
+
+is a \textbf{convex optimization problem}\index{convex optimization}. Squared loss $l(z)=\frac{1}{2}(a-bx)^2$ is convex, since $\frac{d^2l(z)}{dz^2}=b^2\geq 0$. Then minimizing squared loss function is a convex optimization problem. Logistic regression loss function $l(z)=\log (1+\exp{(-z)})$, where $z=y\textbf{w}^T\textbf{x}$, is convex, since $\frac{d^2l(z)}{dz^2}=\frac{\exp{(-x)}}{(1+\exp{(-x)})^2}\geq 0$. Then minimizing logistic regression loss function is a convex optimization problem.
+
+\end{document}

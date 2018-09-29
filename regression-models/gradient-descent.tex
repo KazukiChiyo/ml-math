@@ -1,0 +1,27 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+\subsection{Gradient descent}
+The gradient of a differentiable function $f: \mathbb{R}^D\to \mathbb{R}$ at \textbf{w}, is $$\nabla f(\textbf{w})=\bigg(\frac{\partial f(\textbf{w})}{\partial \textbf{w}_1}, ..., \frac{\partial f(\textbf{w})}{\partial \textbf{w}_D} \bigg).$$ \textbf{Gradient descent}\index{gradient descent} is an iterative algorithm for minimizing a differentiable convex function, and at each step, the update step is $$\textbf{w}^{t+1}=\textbf{w}^t-\eta\nabla f(\textbf{w}^t).$$ After $N$ iterations, the algorithm outputs the averaged vector $\bar{\textbf{w}}=\frac{1}{N}\sum\textbf{w}^t$. $\eta$ is the learning rate for the process and must satisfies the following \textbf{Robbins-Monro}\index{Robbins-Monro} conditions $$\sum_{k=1}^{\infty}\eta_k=\infty, \sum_{k=1}^{\infty}\eta_k^2<\infty.$$
+
+\subsection{Stochastic gradient descent}
+\textbf{Stochastic gradient descent}\index{stochastic gradient descent} samples datapoints, with replacement, from the training set in each iteration.
+\smallskip\begin{algorithm}[H]
+\caption{Stochastic gradient descent}\label{sgd}
+\begin{algorithmic}[5]
+\Procedure{sgd}{\textbf{x}, y, max\_iter}
+  \State \textbf{w} := 0
+  \For{i in max\_iter}
+    \State shuffle data
+    \For{i in N}
+      \State $g_i:=\nabla f(\textbf{w}, x_i)$
+      \State $\textbf{w}:=\textbf{w}-\eta_i g_i$
+    \EndFor
+  \EndFor
+  \State \textbf{return} \textbf{w}
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}\smallskip
+
+With linear regression model, gradient w.r.t to \textbf{w} is $g=\nabla f(\textbf{w},\textbf{x})=\textbf{x}^T\textbf{w}^T\textbf{x}-\textbf{x}^Ty=\textbf{x}^T(\textbf{w}^T\textbf{x}-y)$, and so $g_i=(x_iw-y_i)x_i$.
+\end{document}

@@ -1,0 +1,17 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+If the training set $\{\textbf{x}, y\}$ is nonlinear, instead of trying to fit a nonlinear model, we can map $\{\textbf{x}, y\}$ to a new space by nonlinear transformation and then use the transformed $\{\textbf{x}', y\}$ to fit a linear model. Formally we have $\textbf{x}\subset \mathbb{R}^N$ and $\textbf{x}'\subset \mathbb{R}^K$, and \textbf{basis function}\index{basis function} $\Phi: \mathbb{R}^N\to \mathbb{R}^K$ such that $\Phi(\textbf{x})=\textbf{x}'$. Consider the primal problem of soft-SVM with kernel function $\Phi$ applied: $$\min_{\textbf{w}, \xi}\big( \frac{1}{2}|\textbf{w}|^2+C\sum_{i=1}^K\xi_i \big) \quad \text{s.t.} \quad \xi_i\geq 0, y_i\textbf{w}^T\Phi(\textbf{x}_i)\geq 1-\xi_i,$$ and its dual problem now becomes: $$\max_{\alpha}\bigg(\sum_{i=1}^K \alpha_i-\frac{1}{2}\sum_{i=1}^K\sum_{j=1}^K\alpha_i\alpha_j y_i y_j \Phi(\textbf{x}_i)^T\Phi(\textbf{x}_j)\bigg),$$
+
+subject to $\sum_{i=1}^K\alpha_iy_i=0$ and $0 \leq \alpha_i \leq C$. We can replace the inner product with a \textbf{kernel function}\index{kernel function} $K(\textbf{x}_i, \textbf{x}_j)=\Phi(\textbf{x}_i)^T\Phi(\textbf{x}_j)$.
+
+\subsubsection{Polynomial kernel}
+Polynomial kernel of degree $q$ is defined by $K(\textbf{x}_i, \textbf{x}_j)=(\textbf{x}_j^T\textbf{x}_i+1)^q$. When $q=1$, we have a linear kernel.
+
+\subsubsection{Radial-basis function (RBF) kernel}
+RBF kernel function defines a spherical kernel that is based on Gaussian model of the Euclidean distance: $$K(\textbf{x}_i, \textbf{x}_j)=\exp{\bigg( \frac{|\textbf{x}_i-\textbf{x}_j|^2}{2s^2} \bigg)}.$$
+
+\subsubsection{Sigmoid kernel}
+$$K(\textbf{x}_i, \textbf{x}_j)=\tanh{(a\textbf{x}_i^T\textbf{x}_j+b)},$$
+where $\tanh{()}$ has the same shape with sigmoid function.
+\end{document}

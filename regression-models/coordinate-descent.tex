@@ -1,0 +1,44 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+
+Similar to ridge regression, \textbf{lasso regression}\index{lasso regression} imposes a different constraint $|\textbf{w}|_1 \leq \alpha$. The problem now becomes $$\argmin_{\textbf{w}}\frac{1}{2}\big(|y-\textbf{w}^T\textbf{x}|^2_2+\alpha|\textbf{w}|_1\big).$$
+The solution to a similar problem, $$\argmin_x\frac{1}{2}(y-x)^2+\alpha|x|$$ is $s(x, \alpha)$, the \textbf{soft-thresholding function}\index{soft-thresholding}:
+\begin{equation} \label{eq1-2}
+s(x, \alpha) = \left\{
+        \begin{array}{ll}
+            0 & \quad |x| \leq \alpha \\
+            x-\alpha \text{sgn}(x) & \quad o.w.
+        \end{array}
+    \right.
+\end{equation}
+Let partial residual of $k\in [1, N]$ be $r_k=y_i-\sum_{i\neq j}x_i\textbf{w}_i$, then
+\begin{equation} \label{eq1-3}
+\begin{split}
+l(x_k) & = \frac{1}{2}|r_k-x_k\textbf{w}_k|^2_2+\alpha|\textbf{w}|_1 \\
+ & = \frac{1}{2}(r_k-x_k\textbf{w}_k)^T(r_k-x_k\textbf{w}_k)+\alpha|\textbf{w}|_1 \\
+ & = \frac{1}{2}|r_k|^2-r_k^Tx_k\textbf{w}_k+\frac{1}{2}|x_k|^2\textbf{w}_k^2+\alpha\sum_{i\neq k}|\textbf{w}_i|+\alpha|\textbf{w}_k| \\
+ & = \frac{1}{2}|x_k|^2\textbf{w}_k^2-r_k^Tx_k\textbf{w}_k+\frac{1}{2}|x_k|^2\textbf{w}_k^2+\alpha\sum_{i\neq k}|\textbf{w}_i|+\alpha|\textbf{w}_k| \\
+ & \sim |x_k|^2\bigg[\frac{1}{2}\big(\textbf{w}_k-\frac{r_k^Tx_k}{|x_k|^2}\big)^2+\frac{\alpha}{|x_k|^2}|\textbf{w}_k| \bigg].
+\end{split}
+\end{equation}
+From equation \ref{eq1-2}, $$\argmin_{\textbf{w}_k}l(x_k)=s\bigg(\frac{r_k^Tx_k}{|x_k|^2}, \frac{\alpha}{|x_k|^2}\bigg)=\frac{1}{|x_k|^2}s(r_k^Tx_k, \alpha).$$
+Intercept $b$ can be calculated by setting the partial derivative of $l(x)$ w.r.t $b$ to 0 and solve the equation:
+$$\frac{\partial}{\partial b}\frac{1}{2}(y-\textbf{w}^T\textbf{x}-b)^T(y-\textbf{w}^T\textbf{x}-b)=-y+\textbf{w}^T\textbf{x}+b=0.$$ And so $b=\frac{y-\textbf{w}^T\textbf{x}}{N}$.
+Coordinate descent can be done as follows:
+\smallskip\begin{algorithm}[H]
+\caption{Lasso with coordinate descent}\label{lasso}
+\begin{algorithmic}[5]
+\Procedure{lasso}{\textbf{x}, y, max\_iter, $\alpha$}
+  \State \textbf{w} := 0
+  \State $b:=\frac{y-\textbf{w}^T\textbf{x}}{N}$
+  \For{i in max\_iter}
+    \State $r_k:=y_i-\sum_{i\neq j}\textbf{w}_i^Tx_i$
+    \State $\textbf{w}_k:=\frac{1}{|x_k|^2}s(r_k^Tx_k, \alpha)$
+    \State $b:=\frac{y-\textbf{w}^T\textbf{x}}{N}$
+  \EndFor
+  \State \textbf{return} \textbf{w}, $b$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}\smallskip
+\end{document}

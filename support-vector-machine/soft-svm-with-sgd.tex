@@ -1,0 +1,44 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+Recall the unconstrained form of soft-SVM $$\min_{\textbf{w}}\big( \frac{\lambda}{2}|\textbf{w}|^2+\sum_{i=1}^Nl_{\text{hinge}}(y_i\textbf{w}^T\textbf{x}_i) \big)=\min_{\textbf{w}}\big( \frac{\lambda}{2}|\textbf{w}|^2+\sum_{i=1}^N\max\{ 0, 1-y_i\textbf{w}^T\textbf{x}_i \} \big).$$
+Since this function is strongly-convex, we have the update rule
+\begin{equation} \label{eq3-5}
+\begin{split}
+\textbf{w}^{t+1} & = \textbf{w}^t-\frac{1}{\lambda t}(\lambda\textbf{w}^t+v_t) \\
+ & = (1-\frac{1}{t})\textbf{w}^t-\frac{1}{\lambda t}v_t \\
+ & = \frac{t-1}{t}\big( \frac{t-2}{t-1}\textbf{w}^{t-1}-\frac{1}{\lambda(t-1)}v_{t-1} \big)-\frac{1}{\lambda t}v_t \\
+ & = -\frac{1}{\lambda t}\sum_{i=1}^t v_i,
+\end{split}
+\end{equation}
+where $v_i\in \partial l_{\text{hinge}}(\textbf{w})$ is a subgradient of the loss function on the random sample chosen at iteration $i$:
+\begin{equation} \label{eq3-6}
+v_i = \partial l_{\text{hinge}}(\textbf{w}) = \left\{
+        \begin{array}{ll}
+            0 & \quad 1-y_i\textbf{w}^T\textbf{x}_i \leq 0\\
+            -y_i\textbf{x}_i & \quad o.w.
+        \end{array}
+    \right.
+\end{equation}
+
+Therefore, we obtain the following procedure for soft-SVM.
+\smallskip\begin{algorithm}[H]
+\caption{soft-SVM}\label{soft-svm}
+\begin{algorithmic}[5]
+\Procedure{soft-svm}{\textbf{x}, y, max\_iter, $\lambda$}
+  \State $\textbf{w}$ := 0
+  \For{t in max\_iter}
+    \State $\eta:=\frac{1}{\lambda t}$
+    \State i := rand(0, N)
+    \If{$1-y_i\textbf{w}^T\textbf{x}_i > 0$}
+      \State $g:=-y_i\textbf{x}_i+\lambda\textbf{w}$
+    \Else
+      \State $g:=\lambda\textbf{w}$
+    \EndIf
+    \State $\textbf{w}:=\textbf{w}-\eta g$
+  \EndFor
+  \State \textbf{return} $\textbf{w}$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}\smallskip
+\end{document}

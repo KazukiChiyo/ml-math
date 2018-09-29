@@ -1,0 +1,37 @@
+\documentclass[../main.tex]{subfiles}
+\begin{document}
+\setlength{\parindent}{0pt}
+Let $\textbf{x}_1, ..., \textbf{x}_m$ be $m$ vectors in $\mathbb{R}^n$. We want to reduce the dimensionality of these vectors using a linear transformation $\textbf{x}\to W\textbf{x}$, where $W\in \mathbb{R}^{d, n}$ is a matrix such that $d<n$, and so $W\textbf{x}\in\mathbb{R}^d$ is the lower dimensionality representation of \textbf{x}. Then, a second matrix $U\in\mathbb{R}^{n, d}$ can be used to approximately recover each original vector $\textbf{x}$ from its compressed version. Therefore, for a compressed vector $\textbf{x}'=W\textbf{x}\in\mathbb{R}^d$, we have a reconstructed $\hat{\textbf{x}}=U\textbf{x}'=UW\textbf{x}\in\mathbb{R}^n$ that resides in the same dimensional space as $\textbf{x}$. The problem that finds the compression matrix $W$ and recovering matrix $U$ with the minimal total squared distance between $\textbf{x}$ and $\hat{\textbf{x}}$ is called \textbf{principle component analysis (PCA)}\index{principle component analysis}; in other words, we want to solve $$\argmin_{W\in\mathbb{R}^{d, n}, U\in\mathbb{R}^{n, d}}\sum_{i=1}^{m}|\textbf{x}_i-UW\textbf{x}_i|^2.$$
+
+\begin{lemma}\label{lem4-1}
+The columns of $U$ are orthonormal ($U^TU=I\in\mathbb{R}^d$) and $W=U^T$.
+\end{lemma}
+\begin{proof}
+Consider matrix $V\in\mathbb{R}^{n, d}$ so that $V^TV=I$. Then $\forall \textbf{x}\in \mathbb{R}^n,  \textbf{x}'\in\mathbb{R}^d$ we have $$|\textbf{x}-\hat{\textbf{x}}|^2=|\textbf{x}-V\textbf{x}'|^2=|\textbf{x}|^2+\textbf{x}'^TV^TV\textbf{x}'-2\textbf{x}'^TV^T\textbf{x}=|\textbf{x}|^2+|\textbf{x}'|^2-2\textbf{x}'^T(V^T\textbf{x}).$$ Setting partial derivative with respect to $\textbf{x}'$ to 0 gives $\textbf{x}'=V^T\textbf{x}$, and so $VV^T\textbf{x}=\argmin_{\hat{\textbf{x}}\in\mathbb{R}}|\textbf{x}-\hat{\textbf{x}}|^2$. Therefore, $W=V^T$. This can be generalized for $\textbf{x}_1, ..., \textbf{x}_m$ and so $U=V$, $W=U^T$, $U^TU=I$.
+\end{proof}
+
+From lemma \ref{lem4-1}, $|\textbf{x}-UW\textbf{x}|^2=|\textbf{x}-UU^T\textbf{x}|^2=|\textbf{x}|^2-\text{trace}({U^T\textbf{xx}^TU})$, where the trace of a matrix is the sum of its diagonal entries. Therefore, the PCA optimization problem becomes: $$\argmax_{U\in\mathbb{R}^{n, d}, U^TU=I}\text{trace}\bigg(U^T\sum_{i=1}^{m}(\textbf{x}_i\textbf{x}_i^T)U\bigg).$$
+
+Let $A=\sum_{i=1}^{m}\textbf{x}_i\textbf{x}_i^T$. Then $A$ is symmetric and it can be written using eigendecomposition as $A=Q\Lambda Q^T$, where $Q\in\mathbb{R}^{n, n}$ is a square matrix whose $i$-th column is the eigenvector $q_i$, and $\Lambda$ is a diagonal matrix whose $i$-th diagonal element $\Lambda_{ii}$ is the eigenvalue $\lambda_i$. Then
+
+\begin{equation} \label{eq4-1}
+\begin{split}
+\argmax_{U\in\mathbb{R}^{n, d}, U^TU=I}\text{trace}\bigg(U^TAU\bigg) & = \argmax_{QU\in\mathbb{R}^{n, d}, U^TU=I}\text{trace}\bigg((QU)^TQ\Lambda Q^TQU\bigg) \\
+ & = \argmax_{QU\in\mathbb{R}^{n, d}, U^TU=I}\text{trace}\bigg(U^T\Lambda U\bigg) \\
+ & = \sum_{i=1}^n \lambda_i
+\end{split}
+\end{equation}
+
+The problems now reduces to finding eigenvectors of $\textbf{x}^T\textbf{x}$ with the largest $d$ eigenvalues:
+\smallskip\begin{algorithm}[H]
+\caption{PCA}\label{pca}
+\begin{algorithmic}[5]
+\Procedure{pca}{\textbf{x}, d}
+  \State $A:=\textbf{x}^T\textbf{x}$
+  \State let $q_1, ..., q_d$ be eigenvectors of $A$ with largest $d$ eigenvalues
+  \State \textbf{return} $q_1, ..., q_d$
+\EndProcedure
+\end{algorithmic}
+\end{algorithm}\smallskip
+
+\end{document}
